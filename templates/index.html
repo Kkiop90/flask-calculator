@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>Web Calculator</h1>
+
+    <form method="POST">
+        <input type="number" name="num1" placeholder="Enter first number" required>
+        <input type="number" name="num2" placeholder="Enter second number" required>
+
+        <select name="operation">
+            <option value="+">Add</option>
+            <option value="-">Subtract</option>
+            <option value="*">Multiply</option>
+            <option value="/">Divide</option>
+            <option value="%">Modulo</option>
+            <option value="**">Power</option>
+            <option value="//">Floor Division</option>
+
+        </select>
+
+        <button type="submit">Calculate</button>
+    </form>
+
+    {% if result is not none %}
+        <h2>Result: {{ result }}</h2>
+    {% endif %}
+
+</body>
+</html>
