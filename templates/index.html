@@ -8,9 +8,10 @@
 
     <h1>Web Calculator</h1>
 
+
     <form method="POST">
-        <input type="number" name="num1" placeholder="Enter first number" required>
-        <input type="number" name="num2" placeholder="Enter second number" required>
+        <input type="text" name="num1" placeholder="Enter first number" value="{{ num1|default('') }}" required pattern="^-?\d*\.?\d*$" title="Enter a valid number">
+        <input type="text" name="num2" placeholder="Enter second number" value="{{ num2|default('') }}" required pattern="^-?\d*\.?\d*$" title="Enter a valid number">
 
         <select name="operation">
             <option value="+">Add</option>
@@ -24,7 +25,26 @@
         </select>
 
         <button type="submit">Calculate</button>
+        <button type="submit" name="clear" value="1">Clear</button>
     </form>
+
+    {% if error %}
+        <div style="color: red;">Error: {{ error }}</div>
+    {% endif %}
+
+    {% if last_operation %}
+        <div>Last Operation: <b>{{ last_operation }}</b></div>
+    {% endif %}
+
+    {% if history %}
+        <h3>Calculation History</h3>
+        <ul>
+        {% for item in history %}
+            <li>{{ item }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
 
     {% if result is not none %}
         <h2>Result: {{ result }}</h2>
