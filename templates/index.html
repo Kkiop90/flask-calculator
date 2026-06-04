@@ -9,46 +9,75 @@
     <h1>Web Calculator</h1>
 
 
-    <form method="POST">
-        <input type="text" name="num1" placeholder="Enter first number " value="{{ num1|default('') }}" required pattern="^-?\d*\.?\d*$" title="Enter a valid number">
-        <input type="text" name="num2" placeholder="Enter second number " value="{{ num2|default('') }}" required pattern="^-?\d*\.?\d*$" title="Enter a valid number">
+    <form method="POST" class="calculator-form">
+        <input type="text" name="expression" id="expression" placeholder="Type expression or use buttons" value="{{ expression|default('') }}" autocomplete="off" required>
 
-        <select name="operation">
-            <option value="+">Add</option>
-            <option value="-">Subtract</option>
-            <option value="*">Multiply</option>
-            <option value="/">Divide</option>
-            <option value="%">Modulo</option>
-            <option value="**">Power</option>
-            <option value="//">Floor Division</option>
+        <div class="button-grid">
+            <button type="button" class="digit" onclick="appendValue('7')">7</button>
+            <button type="button" class="digit" onclick="appendValue('8')">8</button>
+            <button type="button" class="digit" onclick="appendValue('9')">9</button>
+            <button type="button" class="action" onclick="deleteChar()">DEL</button>
 
-        </select>
+            <button type="button" class="digit" onclick="appendValue('4')">4</button>
+            <button type="button" class="digit" onclick="appendValue('5')">5</button>
+            <button type="button" class="digit" onclick="appendValue('6')">6</button>
+            <button type="button" class="operator" onclick="appendValue('+')">+</button>
 
-        <button type="submit">Calculate</button>
-        <button type="submit" name="clear" value="1">Clear</button>
+            <button type="button" class="digit" onclick="appendValue('1')">1</button>
+            <button type="button" class="digit" onclick="appendValue('2')">2</button>
+            <button type="button" class="digit" onclick="appendValue('3')">3</button>
+            <button type="button" class="operator" onclick="appendValue('-')">-</button>
+
+            <button type="button" class="digit" onclick="appendValue('0')">0</button>
+            <button type="button" class="digit" onclick="appendValue('.')">.</button>
+            <button type="button" class="action" onclick="clearExpression()">AC</button>
+            <button type="button" class="operator" onclick="appendValue('*')">×</button>
+
+            <button type="button" class="operator" onclick="appendValue('/')">÷</button>
+            <button type="button" class="operator" onclick="appendValue('%')">%</button>
+            <button type="button" class="operator" onclick="appendValue('**')">^</button>
+            <button type="button" class="operator" onclick="appendValue('//')">//</button>
+        </div>
+
+        <div class="action-row">
+            <button type="submit" class="calculate">=</button>
+            <button type="submit" name="clear" value="1" class="clear-btn" formnovalidate>Clear</button>
+        </div>
     </form>
 
     {% if error %}
-        <div style="color: red;">Error: {{ error }}</div>
+        <div class="message error">{{ error }}</div>
     {% endif %}
-
-    {% if last_operation %}
-        <div>Last Operation: <b>{{ last_operation }}</b></div>
-    {% endif %}
-
-    {% if history %}
-        <h3>Calculation History</h3>
-        <ul>
-        {% for item in history %}
-            <li>{{ item }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-
 
     {% if result is not none %}
-        <h2>Result: {{ result }}</h2>
+        <div class="message result">Result: {{ result }}</div>
     {% endif %}
+
+    <script>
+        const expressionInput = document.getElementById('expression');
+
+        function appendValue(value) {
+            const cursor = expressionInput.selectionStart;
+            const text = expressionInput.value;
+            expressionInput.value = text.slice(0, cursor) + value + text.slice(cursor);
+            expressionInput.focus();
+            expressionInput.selectionStart = expressionInput.selectionEnd = cursor + value.length;
+        }
+
+        function deleteChar() {
+            const cursor = expressionInput.selectionStart;
+            if (cursor === 0) return;
+            const text = expressionInput.value;
+            expressionInput.value = text.slice(0, cursor - 1) + text.slice(cursor);
+            expressionInput.focus();
+            expressionInput.selectionStart = expressionInput.selectionEnd = cursor - 1;
+        }
+
+        function clearExpression() {
+            expressionInput.value = '';
+            expressionInput.focus();
+        }
+    </script>
 
 </body>
 </html>
